@@ -1,0 +1,114 @@
+---
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import LessonLayout from '../../../../layouts/LessonLayout.astro';
+import { ComparisonView } from '../../../../components/ComparisonView';
+import { FeatureNav } from '../../../../components/FeatureNav';
+import { MarkComplete } from '../../../../components/MarkComplete';
+import { Breadcrumb } from '../../../../components/Breadcrumb';
+import { AiChatWrapper } from '../../../../components/AiChatWrapper';
+import { loadFeatures, getFlatFeatureList, getAdjacentFeatures } from '../../../../lib/features';
+import { getAvailableLanguages } from '../../../../lib/languages';
+import { loadFeatureContent } from '../../../../lib/content';
+import type { GetStaticPaths } from 'astro';
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const config = await loadFeatures();
+  const languages = await getAvailableLanguages();
+  const features = getFlatFeatureList(config);
+  const paths = [];
+  const LANGUAGES_DIR = path.resolve('content/languages');
+
+  for (const known of languages) {
+    for (const learning of languages) {
+      if (known.slug === learning.slug) continue;
+      for (const feature of features) {
+        const knownPath = path.join(LANGUAGES_DIR, known.slug, feature.category, `${feature.slug}.md`);
+        const learningPath = path.join(LANGUAGES_DIR, learning.slug, feature.category, `${feature.slug}.md`);
+
+        // Only generate a page if both content files exist
+        const bothExist = await Promise.all([
+          fs.access(knownPath).then(() => true).catch(() => false),
+          fs.access(learningPath).then(() => true).catch(() => false),
+        ]).then(([a, b]) => a && b);
+
+        if (!bothExist) continue;
+
+        paths.push({
+          params: {
+            known: known.slug,
+            learning: learning.slug,
+            feature: feature.slug,
+          },
+          props: {
+            knownName: known.name,
+            learningName: learning.name,
+            featureTitle: feature.title,
+            featureCategory: feature.category,
+          },
+        });
+      }
+    }
+  }
+
+  return paths;
+};
+
+const { known, learning, feature } = Astro.params;
+const { knownName, learningName, featureTitle, featureCategory } = Astro.props;
+
+const config = await loadFeatures();
+const category = config.categories.find((c) => c.slug === featureCategory);
+const { prev, next } = getAdjacentFeatures(config, feature!);
+
+// getStaticPaths already constrains valid pages, so content always exists at build time
+const knownContent = await loadFeatureContent(known!, featureCategory, feature!);
+const learningContent = await loadFeatureContent(learning!, featureCategory, feature!);
+---
+
+<LessonLayout
+  title={featureTitle}
+  knownLang={known!}
+  learningLang={learning!}
+  knownName={knownName}
+  learningName={learningName}
+>
+  <Breadcrumb
+    category={featureCategory}
+    categoryTitle={category?.title ?? featureCategory}
+    featureTitle={featureTitle}
+    knownLang={known!}
+    learningLang={learning!}
+  />
+
+  <h1 class="text-3xl font-bold text-white mb-8">{featureTitle}</h1>
+
+  <ComparisonView
+    client:load
+    known={knownContent}
+    learning={learningContent}
+    knownName={knownName}
+    learningName={learningName}
+  />
+
+  <MarkComplete
+    client:load
+    knownLang={known!}
+    learningLang={learning!}
+    featureSlug={feature!}
+  />
+
+  <FeatureNav
+    knownLang={known!}
+    learningLang={learning!}
+    prev={prev}
+    next={next}
+  />
+
+  <AiChatWrapper
+    client:load
+    knownLang={known!}
+    learningLang={learning!}
+    featureContext={`Help me understand "${featureTitle}" — comparing ${knownName} to ${learningName}`}
+  />
+</LessonLayout>

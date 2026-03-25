@@ -1,0 +1,124 @@
+categories:
+  - slug: basics
+    title: Basics
+    order: 1
+    features:
+      - slug: variables
+        title: Variables & Declaration
+        order: 1
+      - slug: types
+        title: Types & Type Systems
+        order: 2
+      - slug: operators
+        title: Operators
+        order: 3
+      - slug: control-flow
+        title: Control Flow
+        order: 4
+
+  - slug: functions
+    title: Functions
+    order: 2
+    features:
+      - slug: declaration
+        title: Function Declaration
+        order: 1
+      - slug: parameters
+        title: Parameters & Arguments
+        order: 2
+      - slug: return-values
+        title: Return Values
+        order: 3
+      - slug: closures
+        title: Closures & Lambdas
+        order: 4
+
+  - slug: data-structures
+    title: Data Structures
+    order: 3
+    features:
+      - slug: arrays
+        title: Arrays & Lists
+        order: 1
+      - slug: maps
+        title: Maps & Dictionaries
+        order: 2
+      - slug: sets
+        title: Sets
+        order: 3
+      - slug: tuples
+        title: Tuples
+        order: 4
+      - slug: structs-classes
+        title: Structs & Classes
+        order: 5
+
+  - slug: oop
+    title: Object-Oriented Programming
+    order: 4
+    features:
+      - slug: classes
+        title: Classes
+        order: 1
+      - slug: inheritance
+        title: Inheritance
+        order: 2
+      - slug: interfaces
+        title: Interfaces & Traits
+        order: 3
+      - slug: generics
+        title: Generics
+        order: 4
+
+  - slug: error-handling
+    title: Error Handling
+    order: 5
+    features:
+      - slug: exceptions
+        title: Exceptions & Try/Catch
+        order: 1
+      - slug: result-types
+        title: Result Types
+        order: 2
+
+  - slug: concurrency
+    title: Concurrency
+    order: 6
+    features:
+      - slug: async-await
+        title: Async/Await
+        order: 1
+      - slug: threads
+        title: Threads
+        order: 2
+      - slug: channels
+        title: Channels & Message Passing
+        order: 3
+
+  - slug: ecosystem
+    title: Ecosystem
+    order: 7
+    features:
+      - slug: package-manager
+        title: Package Manager
+        order: 1
+      - slug: project-structure
+        title: Project Structure
+        order: 2
+      - slug: testing
+        title: Testing
+        order: 3
+      - slug: build-tools
+        title: Build Tools
+        order: 4
+
+  - slug: idioms
+    title: Idioms
+    order: 8
+    features:
+      - slug: common-patterns
+        title: Common Patterns
+        order: 1
+      - slug: style-conventions
+        title: Style Conventions
+        order: 2

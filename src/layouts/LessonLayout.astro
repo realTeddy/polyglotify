@@ -1,0 +1,24 @@
+---
+import BaseLayout from './BaseLayout.astro';
+
+interface Props {
+  title: string;
+  knownLang: string;
+  learningLang: string;
+  knownName: string;
+  learningName: string;
+}
+
+const { title, knownLang, learningLang, knownName, learningName } = Astro.props;
+---
+
+<BaseLayout title={title}>
+  <div class="max-w-7xl mx-auto px-6 py-8">
+    <div class="flex items-center gap-2 text-sm mb-2" style="font-family: 'JetBrains Mono', monospace;">
+      <span style="color: var(--accent-known); font-weight: 600;">{knownName}</span>
+      <span style="color: var(--text-muted);">→</span>
+      <span style="color: var(--accent-learning); font-weight: 600;">{learningName}</span>
+    </div>
+    <slot />
+  </div>
+</BaseLayout>

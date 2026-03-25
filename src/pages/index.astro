@@ -1,0 +1,135 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { LanguagePicker } from '../components/LanguagePicker';
+import { ReturningUserPrompt } from '../components/ReturningUserPrompt';
+import { getAvailableLanguages } from '../lib/languages';
+import { loadFeatures, getFlatFeatureList } from '../lib/features';
+
+const languages = await getAvailableLanguages();
+const config = await loadFeatures();
+const firstFeature = getFlatFeatureList(config)[0];
+const languageNames = Object.fromEntries(languages.map(l => [l.slug, l.name]));
+---
+
+<BaseLayout title="Learn by Comparing">
+  <!-- Hero section with dot-grid background -->
+  <div class="relative overflow-hidden dot-grid" style="background-color: var(--bg-base);">
+    <!-- Subtle gradient overlay on top of the dot grid -->
+    <div
+      class="absolute inset-0 pointer-events-none"
+      style="background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(6,182,212,0.07) 0%, transparent 70%);"
+    ></div>
+
+    <div class="relative max-w-4xl mx-auto px-6 py-24 text-center">
+
+      <!-- Decorative bracket left -->
+      <span
+        class="absolute left-8 top-16 select-none pointer-events-none hidden lg:block"
+        style="font-family: 'JetBrains Mono', monospace; font-size: 8rem; font-weight: 700; color: var(--border); line-height: 1;"
+        aria-hidden="true"
+      >{`{`}</span>
+
+      <!-- Decorative bracket right -->
+      <span
+        class="absolute right-8 top-16 select-none pointer-events-none hidden lg:block"
+        style="font-family: 'JetBrains Mono', monospace; font-size: 8rem; font-weight: 700; color: var(--border); line-height: 1;"
+        aria-hidden="true"
+      >{`}`}</span>
+
+      <!-- Comment-style eyebrow -->
+      <p
+        class="mb-6 text-sm tracking-widest uppercase"
+        style="font-family: 'JetBrains Mono', monospace; color: var(--text-muted);"
+      >
+        <span style="color: var(--accent-ui);">// </span>a developer learning tool
+      </p>
+
+      <!-- Main heading with blinking cursor -->
+      <h1
+        class="text-4xl md:text-6xl font-bold leading-tight mb-6 cursor-blink"
+        style="font-family: 'JetBrains Mono', monospace; color: var(--text-primary);"
+      >
+        learn a new lang<br />
+        <span style="color: var(--accent-known);">by comparing it</span><br />
+        <span style="color: var(--text-secondary);">to what you know</span>
+      </h1>
+
+      <!-- Subtitle in comment style -->
+      <p
+        class="text-base md:text-lg mb-14 max-w-xl mx-auto"
+        style="color: var(--text-secondary);"
+      >
+        Pick a language you know and one you want to learn.
+        Every feature shown <span style="color: var(--accent-learning);">side-by-side</span>
+        with examples, descriptions, and gotchas.
+      </p>
+
+      <!-- Returning user prompt -->
+      <ReturningUserPrompt client:load languageNames={languageNames} />
+
+      <!-- Language picker -->
+      <div class="flex justify-center">
+        <LanguagePicker
+          client:load
+          languages={languages}
+          firstFeatureSlug={firstFeature?.slug ?? 'variables'}
+        />
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Below-the-fold: feature highlights -->
+  <div style="background-color: var(--bg-surface); border-top: 1px solid var(--border);" class="py-20 px-6">
+    <div class="max-w-4xl mx-auto">
+      <p
+        class="text-xs uppercase tracking-widest mb-10 text-center"
+        style="font-family: 'JetBrains Mono', monospace; color: var(--text-muted);"
+      >
+        <span style="color: var(--accent-purple);">// </span>what's inside
+      </p>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {[
+          {
+            num: '01',
+            title: 'Side-by-side',
+            desc: 'Every language feature shown simultaneously — no context switching.',
+            accent: 'var(--accent-known)',
+          },
+          {
+            num: '02',
+            title: 'Track progress',
+            desc: 'Mark features complete. Resume where you left off.',
+            accent: 'var(--accent-learning)',
+          },
+          {
+            num: '03',
+            title: 'AI tutor',
+            desc: 'Bring your own API key and ask questions in context.',
+            accent: 'var(--accent-ui)',
+          },
+        ].map(({ num, title, desc, accent }) => (
+          <div
+            style={`background-color: var(--bg-card); border: 1px solid var(--border); border-left: 3px solid ${accent};`}
+            class="p-6"
+          >
+            <div
+              class="text-xs mb-3"
+              style={`font-family: 'JetBrains Mono', monospace; color: var(--text-muted);`}
+            >
+              {num}
+            </div>
+            <h3
+              class="text-base font-semibold mb-2"
+              style={`font-family: 'JetBrains Mono', monospace; color: ${accent};`}
+            >
+              {title}
+            </h3>
+            <p class="text-sm" style="color: var(--text-secondary);">{desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+</BaseLayout>
