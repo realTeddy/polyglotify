@@ -1,0 +1,136 @@
+/* ── Google Fonts ── */
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Manrope:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── CSS Variables ── */
+:root {
+  --bg-base: #0b0f19;
+  --bg-surface: #131825;
+  --bg-card: #1a2035;
+  --bg-hover: #222940;
+  --accent-known: #34d399;
+  --accent-learning: #f97316;
+  --accent-ui: #06b6d4;
+  --accent-purple: #a78bfa;
+  --text-primary: #e2e8f0;
+  --text-secondary: #94a3b8;
+  --text-muted: #475569;
+  --border: #1e293b;
+}
+
+/* ── Base styles ── */
+@layer base {
+  body {
+    @apply antialiased;
+    background-color: var(--bg-base);
+    color: var(--text-primary);
+    font-family: 'Manrope', ui-sans-serif, system-ui, sans-serif;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+  }
+
+  code, pre, kbd, samp {
+    font-family: 'Fira Code', 'JetBrains Mono', ui-monospace, monospace;
+  }
+}
+
+/* ── Dot-grid background ── */
+.dot-grid {
+  background-image: radial-gradient(circle, var(--text-muted) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+/* ── Terminal cursor animation ── */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.cursor-blink::after {
+  content: '▊';
+  display: inline-block;
+  color: var(--accent-ui);
+  animation: blink 1.2s step-end infinite;
+  margin-left: 4px;
+}
+
+/* ── Line numbers (code-editor style) ── */
+.line-numbered {
+  counter-reset: line-num;
+}
+
+.line-numbered > * {
+  counter-increment: line-num;
+  position: relative;
+  padding-left: 3.5rem;
+}
+
+.line-numbered > *::before {
+  content: counter(line-num, decimal-leading-zero);
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  width: 2.5rem;
+  text-align: right;
+  user-select: none;
+}
+
+/* ── Left border accent cards ── */
+.card-known {
+  border-left: 3px solid var(--accent-known);
+}
+
+.card-learning {
+  border-left: 3px solid var(--accent-learning);
+}
+
+.card-ui {
+  border-left: 3px solid var(--accent-ui);
+}
+
+/* ── Comment-style subtitles ── */
+.code-comment::before {
+  content: '// ';
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--text-muted);
+}
+
+/* ── Monospace badge ── */
+.mono-badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: 2px;
+  background-color: var(--bg-card);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  letter-spacing: 0.04em;
+}
+
+/* ── Flat prose overrides (no shadows) ── */
+.prose pre {
+  background-color: var(--bg-base) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 4px !important;
+  box-shadow: none !important;
+}
+
+.prose code {
+  font-family: 'Fira Code', monospace !important;
+  color: var(--accent-known) !important;
+  background: transparent !important;
+}
+
+/* ── No shadows anywhere ── */
+* {
+  box-shadow: none !important;
+}
